@@ -12,6 +12,9 @@ import com.javarush.island.infrastructure.configuration.SimulationConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulationServiceImpl implements SimulationUseCase {
@@ -52,9 +55,21 @@ public class SimulationServiceImpl implements SimulationUseCase {
     public void processLifecycleTick() {
         tickCount++;
         resetAllAnimals();
-        for (int i = 0; i < island.getRows(); i++) {
-            for (int j = 0; j < island.getCols(); j++) {
-                processCellLifecycle(island.getCell(i, j));
+
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<?>> futures = new ArrayList<>();
+            for (int i = 0; i < island.getRows(); i++) {
+                for (int j = 0; j < island.getCols(); j++) {
+                    Cell cell = island.getCell(i, j);
+                    futures.add(executor.submit(() -> processCellLifecycle(cell)));
+                }
+            }
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
