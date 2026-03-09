@@ -76,18 +76,32 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     @Override
     public void processPlantGrowth() {
-        for (int i = 0; i < island.getRows(); i++) {
-            for (int j = 0; j < island.getCols(); j++) {
-                Cell cell = island.getCell(i, j);
-                int currentPlants = cell.getPlants().size();
-                int newPlants = (int) (currentPlants * config.getPlantGrowthRate()) - currentPlants;
-                if (currentPlants == 0) {
-                    newPlants = ThreadLocalRandom.current().nextInt(5);
-                }
-                for (int k = 0; k < newPlants; k++) {
-                    cell.addPlant(new Plant());
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<?>> futures = new ArrayList<>();
+            for (int i = 0; i < island.getRows(); i++) {
+                for (int j = 0; j < island.getCols(); j++) {
+                    Cell cell = island.getCell(i, j);
+                    futures.add(executor.submit(() -> growPlantsInCell(cell)));
                 }
             }
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+
+    private void growPlantsInCell(Cell cell) {
+        int currentPlants = cell.getPlants().size();
+        int newPlants = (int) (currentPlants * config.getPlantGrowthRate()) - currentPlants;
+        if (currentPlants == 0) {
+            newPlants = ThreadLocalRandom.current().nextInt(5);
+        }
+        for (int k = 0; k < newPlants; k++) {
+            cell.addPlant(new Plant());
         }
     }
 
