@@ -16,6 +16,7 @@ public class AnimalLifecycleHandler implements Runnable {
             simulationUseCase.processLifecycleTick();
         } catch (Exception e) {
             System.err.println("Ошибка в жизненном цикле: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -16,6 +16,7 @@ public class PlantGrowthHandler implements Runnable {
             simulationUseCase.processPlantGrowth();
         } catch (Exception e) {
             System.err.println("Ошибка при росте растений: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
