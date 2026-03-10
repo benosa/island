@@ -55,33 +55,21 @@ public class SimulationServiceImpl implements SimulationUseCase {
     public void processLifecycleTick() {
         tickCount++;
         resetAllAnimals();
-
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            List<Future<?>> futures = new ArrayList<>();
-            for (int i = 0; i < island.getRows(); i++) {
-                for (int j = 0; j < island.getCols(); j++) {
-                    Cell cell = island.getCell(i, j);
-                    futures.add(executor.submit(() -> processCellLifecycle(cell)));
-                }
-            }
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
+        executeOnAllCells(cell -> processCellLifecycle(cell));
     }
 
     @Override
     public void processPlantGrowth() {
+        executeOnAllCells(cell -> growPlantsInCell(cell));
+    }
+
+    private void executeOnAllCells(java.util.function.Consumer<Cell> action) {
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             List<Future<?>> futures = new ArrayList<>();
             for (int i = 0; i < island.getRows(); i++) {
                 for (int j = 0; j < island.getCols(); j++) {
                     Cell cell = island.getCell(i, j);
-                    futures.add(executor.submit(() -> growPlantsInCell(cell)));
+                    futures.add(executor.submit(() -> action.accept(cell)));
                 }
             }
             for (Future<?> future : futures) {
