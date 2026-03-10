@@ -31,7 +31,11 @@ public class Application {
         AtomicBoolean running = new AtomicBoolean(true);
         int tickMs = config.getTickDurationMs();
 
-        System.out.printf("Остров %dx%d, такт %d мс%n", config.getIslandRows(), config.getIslandCols(), tickMs);
+        System.out.println("=== Симуляция острова ===");
+        System.out.printf("Размер: %dx%d клеток%n", config.getIslandRows(), config.getIslandCols());
+        System.out.printf("Такт: %d мс, максимум тактов: %d%n", tickMs, config.getMaxTicks());
+        System.out.println("Потоки: Project Loom (virtual threads)");
+        System.out.println("Запуск...");
 
         scheduler.scheduleAtFixedRate(() -> {
             if (!running.get()) return;
