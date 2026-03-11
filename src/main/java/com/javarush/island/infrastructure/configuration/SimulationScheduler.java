@@ -9,7 +9,7 @@ public class SimulationScheduler {
     private final ScheduledExecutorService scheduler;
 
     public SimulationScheduler() {
-        this.scheduler = Executors.newScheduledThreadPool(1, Thread.ofVirtual().factory());
+        this.scheduler = Executors.newScheduledThreadPool(2);
     }
 
     public void scheduleAtFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
