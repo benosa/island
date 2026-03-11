@@ -58,10 +58,18 @@ public class SimulationConfig {
     }
 
     public int getInitialCount(String species) {
-        return Integer.parseInt(properties.getProperty("animal.initial." + species, "0"));
+        return getInt("animal.initial." + species, 0);
     }
 
     public int getOffspringCount(String species) {
-        return Integer.parseInt(properties.getProperty("animal.offspring." + species, "1"));
+        return getInt("animal.offspring." + species, 1);
+    }
+
+    private int getInt(String key, int defaultValue) {
+        try {
+            return Integer.parseInt(properties.getProperty(key, String.valueOf(defaultValue)));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 }
