@@ -11,6 +11,7 @@ import com.javarush.island.domain.ports.in.SimulationUseCase;
 import com.javarush.island.infrastructure.configuration.SimulationConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -153,7 +154,8 @@ public class SimulationServiceImpl implements SimulationUseCase {
     }
 
     private void tryEat(Animal animal, Cell cell) {
-        List<Organism> food = cell.getAllOrganisms();
+        List<Organism> food = new ArrayList<>(cell.getAllOrganisms());
+        Collections.shuffle(food);
         for (Organism prey : food) {
             if (prey == animal) continue;
             if (prey instanceof Animal target && !target.isAlive()) continue;
