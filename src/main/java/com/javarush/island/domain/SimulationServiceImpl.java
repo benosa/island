@@ -8,7 +8,7 @@ import com.javarush.island.domain.aggregate.island.Island;
 import com.javarush.island.domain.aggregate.plant.Plant;
 import com.javarush.island.domain.factory.AnimalFactory;
 import com.javarush.island.domain.ports.in.SimulationUseCase;
-import com.javarush.island.infrastructure.configuration.SimulationConfig;
+import com.javarush.island.domain.ports.out.SimulationConfigPort;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +21,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SimulationServiceImpl implements SimulationUseCase {
 
     private final Island island;
-    private final SimulationConfig config;
+    private final SimulationConfigPort config;
     private int tickCount = 0;
 
-    public SimulationServiceImpl(Island island, SimulationConfig config) {
+    public SimulationServiceImpl(Island island, SimulationConfigPort config) {
         this.island = island;
         this.config = config;
     }
@@ -85,7 +85,7 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     private void growPlantsInCell(Cell cell) {
         int currentPlants = cell.getPlants().size();
-        int newPlants = (int) (currentPlants * config.getPlantGrowthRate()) - currentPlants;
+        int newPlants = (int) Math.round(currentPlants * (config.getPlantGrowthRate() - 1.0));
         if (currentPlants == 0) {
             newPlants = ThreadLocalRandom.current().nextInt(5);
         }

@@ -5,6 +5,8 @@ import com.javarush.island.application.handler.PlantGrowthHandler;
 import com.javarush.island.application.handler.StatisticsHandler;
 import com.javarush.island.domain.SimulationServiceImpl;
 import com.javarush.island.domain.aggregate.island.Island;
+import com.javarush.island.domain.ports.in.SimulationUseCase;
+import com.javarush.island.domain.ports.out.SimulationConfigPort;
 import com.javarush.island.domain.ports.out.StatisticsPort;
 import com.javarush.island.infrastructure.adapters.ConsoleStatisticsAdapter;
 import com.javarush.island.infrastructure.configuration.SimulationConfig;
@@ -18,14 +20,16 @@ public class Application {
     public static void main(String[] args) {
         SimulationConfig config = new SimulationConfig();
         Island island = new Island(config.getIslandRows(), config.getIslandCols());
-        SimulationServiceImpl simulationService = new SimulationServiceImpl(island, config);
+
+        SimulationConfigPort configPort = config;
         StatisticsPort statisticsPort = new ConsoleStatisticsAdapter();
 
-        simulationService.initialize();
+        SimulationUseCase simulationUseCase = new SimulationServiceImpl(island, configPort);
+        simulationUseCase.initialize();
 
-        AnimalLifecycleHandler lifecycleHandler = new AnimalLifecycleHandler(simulationService);
-        PlantGrowthHandler plantHandler = new PlantGrowthHandler(simulationService);
-        StatisticsHandler statisticsHandler = new StatisticsHandler(simulationService, statisticsPort);
+        AnimalLifecycleHandler lifecycleHandler = new AnimalLifecycleHandler(simulationUseCase);
+        PlantGrowthHandler plantHandler = new PlantGrowthHandler(simulationUseCase);
+        StatisticsHandler statisticsHandler = new StatisticsHandler(simulationUseCase, statisticsPort);
 
         SimulationScheduler scheduler = new SimulationScheduler();
         AtomicBoolean running = new AtomicBoolean(true);
@@ -46,7 +50,7 @@ public class Application {
         scheduler.scheduleAtFixedRate(() -> {
             if (!running.get()) return;
             statisticsHandler.run();
-            if (simulationService.isSimulationOver()) {
+            if (simulationUseCase.isSimulationOver()) {
                 System.out.println("\nСимуляция завершена.");
                 running.set(false);
                 scheduler.shutdown();

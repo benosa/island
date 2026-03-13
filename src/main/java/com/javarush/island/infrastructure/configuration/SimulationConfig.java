@@ -1,10 +1,12 @@
 package com.javarush.island.infrastructure.configuration;
 
+import com.javarush.island.domain.ports.out.SimulationConfigPort;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SimulationConfig {
+public class SimulationConfig implements SimulationConfigPort {
 
     private final Properties properties = new Properties();
 

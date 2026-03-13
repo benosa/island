@@ -1,5 +1,7 @@
 package com.javarush.island.domain.ports.in;
 
+import com.javarush.island.domain.aggregate.island.Island;
+
 public interface SimulationUseCase {
 
     void initialize();
@@ -9,4 +11,8 @@ public interface SimulationUseCase {
     void processPlantGrowth();
 
     boolean isSimulationOver();
+
+    int getTickCount();
+
+    Island getIsland();
 }
