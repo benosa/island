@@ -127,6 +127,7 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     private void processCellLifecycle(Cell cell) {
         List<Animal> snapshot = new ArrayList<>(cell.getAnimals());
+        Collections.shuffle(snapshot);
 
         for (Animal animal : snapshot) {
             if (!animal.isAlive() || animal.isProcessed()) continue;
