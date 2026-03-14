@@ -1,5 +1,6 @@
 package com.javarush.island.domain.aggregate.animal.predator;
 
+// TODO: может добавить стайную охоту? волки же стаей ходят
 public class Wolf extends Predator {
 
     public Wolf() {

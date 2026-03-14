@@ -3,7 +3,7 @@ package com.javarush.island.domain.aggregate.animal.herbivore;
 public class Caterpillar extends Herbivore {
 
     public Caterpillar() {
-        super(0.01, 1000, 0, 0);
+        super(0.01, 1000, 0, 0); // не двигается, не ест — просто живёт
     }
 
     @Override

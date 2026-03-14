@@ -1,6 +1,6 @@
 package com.javarush.island.domain.aggregate.animal.herbivore;
 
-public class Rabbit extends Herbivore {
+public class Rabbit extends Herbivore { // плодятся как бешеные, надо бы ограничить
 
     public Rabbit() {
         super(2, 150, 2, 0.45);

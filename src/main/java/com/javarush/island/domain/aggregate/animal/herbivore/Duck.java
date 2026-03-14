@@ -1,5 +1,6 @@
 package com.javarush.island.domain.aggregate.animal.herbivore;
 
+// Утка — травоядное, но ест гусениц (через FeedingMatrix)
 public class Duck extends Herbivore {
 
     public Duck() {
