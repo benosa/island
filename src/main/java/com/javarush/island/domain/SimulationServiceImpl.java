@@ -133,25 +133,30 @@ public class SimulationServiceImpl implements SimulationUseCase {
         List<Animal> snapshot = new ArrayList<>(cell.getAnimals());
         Collections.shuffle(snapshot);
 
+        // сразу помечаем что эта клетка взяла их в обработку,
+        // чтоб соседняя клетка не обработала повторно если животное переместится
         for (Animal animal : snapshot) {
-            if (!animal.isAlive() || animal.isProcessed()) continue;
+            animal.setProcessed(true);
+        }
+
+        for (Animal animal : snapshot) {
+            if (!animal.isAlive()) continue;
             tryEat(animal, cell);
         }
 
         for (Animal animal : snapshot) {
-            if (!animal.isAlive() || animal.isProcessed()) continue;
+            if (!animal.isAlive()) continue;
             tryReproduce(animal, cell);
         }
 
         for (Animal animal : snapshot) {
-            if (!animal.isAlive() || animal.isProcessed()) continue;
+            if (!animal.isAlive()) continue;
             tryMove(animal, cell);
         }
 
         for (Animal animal : snapshot) {
-            if (!animal.isAlive() || animal.isProcessed()) continue;
+            if (!animal.isAlive()) continue;
             animal.consumeEnergy();
-            animal.setProcessed(true);
         }
 
         cell.removeDeadAnimals();
