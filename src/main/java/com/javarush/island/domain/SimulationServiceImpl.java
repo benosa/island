@@ -13,6 +13,7 @@ import com.javarush.island.domain.ports.out.SimulationConfigPort;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -76,8 +77,11 @@ public class SimulationServiceImpl implements SimulationUseCase {
             for (Future<?> future : futures) {
                 try {
                     future.get();
-                } catch (Exception e) {
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    return;
+                } catch (ExecutionException e) {
+                    System.err.println("Ошибка при обработке клетки: " + e.getCause().getMessage());
                 }
             }
         }
