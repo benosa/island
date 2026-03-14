@@ -55,7 +55,6 @@ public class SimulationServiceImpl implements SimulationUseCase {
     @Override
     public void processLifecycleTick() {
         tickCount++;
-        System.out.println("DEBUG tick " + tickCount); // потом убрать
         resetAllAnimals();
         executeOnAllCells(cell -> processCellLifecycle(cell));
     }
