@@ -21,4 +21,9 @@ public class Buffalo extends Herbivore {
     public String getName() {
         return "Buffalo";
     }
+
+    @Override
+    public boolean canCrossRiver() {
+        return false; // слишком тяжёлый
+    }
 }

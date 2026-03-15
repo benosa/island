@@ -113,4 +113,9 @@ public abstract class Animal implements Organism {
         this.reproduced = false;
         this.processed = false;
     }
+
+    // тяжёлые животные переопределяют - не могут переплыть реку
+    public boolean canCrossRiver() {
+        return true;
+    }
 }

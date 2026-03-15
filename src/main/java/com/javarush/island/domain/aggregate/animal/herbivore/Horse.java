@@ -20,4 +20,9 @@ public class Horse extends Herbivore {
     public Horse reproduce() {
         return new Horse();
     }
+
+    @Override
+    public boolean canCrossRiver() {
+        return false;
+    }
 }

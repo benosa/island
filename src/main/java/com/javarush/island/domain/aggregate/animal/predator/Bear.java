@@ -20,4 +20,9 @@ public class Bear extends Predator {
     public String getName() {
         return "Bear";
     }
+
+    @Override
+    public boolean canCrossRiver() {
+        return false;
+    }
 }

@@ -16,10 +16,23 @@ public class Cell {
     private final List<Animal> animals = new CopyOnWriteArrayList<>();
     private final List<Plant> plants = new CopyOnWriteArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
+    private TerrainType terrain = TerrainType.PLAIN;
 
     public Cell(int row, int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public TerrainType getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(TerrainType terrain) {
+        this.terrain = terrain;
+    }
+
+    public boolean isRiver() {
+        return terrain == TerrainType.RIVER;
     }
 
     public void addAnimal(Animal animal) {

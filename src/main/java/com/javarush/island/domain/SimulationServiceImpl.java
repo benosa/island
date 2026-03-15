@@ -32,13 +32,20 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     @Override
     public void initialize() {
+        island.generateRiver();
+
         for (AnimalFactory.AnimalPrototype prototype : AnimalFactory.getAllPrototypes()) {
             int count = config.getInitialCount(prototype.name());
             for (int i = 0; i < count; i++) {
                 Animal animal = AnimalFactory.create(prototype.name());
-                int row = ThreadLocalRandom.current().nextInt(island.getRows());
-                int col = ThreadLocalRandom.current().nextInt(island.getCols());
-                island.getCell(row, col).addAnimal(animal);
+                // не спавним на реке
+                Cell cell;
+                do {
+                    int row = ThreadLocalRandom.current().nextInt(island.getRows());
+                    int col = ThreadLocalRandom.current().nextInt(island.getCols());
+                    cell = island.getCell(row, col);
+                } while (cell.isRiver());
+                cell.addAnimal(animal);
             }
         }
 
@@ -224,10 +231,18 @@ public class SimulationServiceImpl implements SimulationUseCase {
         for (int i = 0; i < actualSteps; i++) {
             Direction direction = animal.chooseDirection();
             Cell target = island.getTargetCell(current.getRow(), current.getCol(), direction);
-            if (target != null) {
+            if (target != null && canMoveTo(animal, target)) {
                 island.moveAnimal(animal, current, target);
                 current = target;
             }
         }
+    }
+
+    private boolean canMoveTo(Animal animal, Cell target) {
+        // река блокирует тяжёлых животных
+        if (target.isRiver() && !animal.canCrossRiver()) {
+            return false;
+        }
+        return true;
     }
 }

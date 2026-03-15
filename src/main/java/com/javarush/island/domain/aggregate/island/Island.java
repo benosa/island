@@ -24,6 +24,21 @@ public class Island {
         }
     }
 
+    // генерим реку - вертикальная полоса примерно посередине острова
+    public void generateRiver() {
+        int riverCol = cols / 2;
+        // река немного виляет
+        for (int i = 0; i < rows; i++) {
+            int offset = (i % 3 == 0) ? 1 : (i % 3 == 1) ? -1 : 0;
+            int col = Math.max(0, Math.min(cols - 1, riverCol + offset));
+            grid[i][col].setTerrain(TerrainType.RIVER);
+            // река шириной 2 клетки в некоторых местах
+            if (i % 2 == 0 && col + 1 < cols) {
+                grid[i][col + 1].setTerrain(TerrainType.RIVER);
+            }
+        }
+    }
+
     public Cell getCell(int row, int col) {
         return grid[row][col];
     }
