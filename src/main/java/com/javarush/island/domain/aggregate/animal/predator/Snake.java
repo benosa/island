@@ -1,5 +1,6 @@
 package com.javarush.island.domain.aggregate.animal.predator;
 
+// Удав
 public class Snake extends Predator {
 
     public Snake() {

@@ -7,8 +7,8 @@ public class Horse extends Herbivore {
     }
 
     @Override
-    public Horse reproduce() {
-        return new Horse();
+    public String getName() {
+        return "Horse";
     }
 
     @Override
@@ -17,7 +17,7 @@ public class Horse extends Herbivore {
     }
 
     @Override
-    public String getName() {
-        return "Horse";
+    public Horse reproduce() {
+        return new Horse();
     }
 }

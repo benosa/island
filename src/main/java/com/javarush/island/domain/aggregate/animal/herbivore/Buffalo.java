@@ -1,5 +1,6 @@
 package com.javarush.island.domain.aggregate.animal.herbivore;
 
+// самое тяжёлое травоядное на острове
 public class Buffalo extends Herbivore {
 
     public Buffalo() {

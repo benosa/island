@@ -15,7 +15,6 @@ public class Eagle extends Predator {
     public String getIcon() {
         return "\uD83E\uDD85";
     }
-
     @Override
     public String getName() {
         return "Eagle";

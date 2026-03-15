@@ -5,7 +5,6 @@ public class Sheep extends Herbivore {
     public Sheep() {
         super(70, 140, 3, 15);
     }
-
     @Override
     public Sheep reproduce() {
         return new Sheep();

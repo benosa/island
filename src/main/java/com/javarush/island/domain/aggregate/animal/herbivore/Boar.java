@@ -2,6 +2,8 @@ package com.javarush.island.domain.aggregate.animal.herbivore;
 
 public class Boar extends Herbivore {
 
+    // по идее всеядный, но в нашей иерархии наследуется от Herbivore
+    // ест мышей и гусениц через FeedingMatrix
     public Boar() {
         super(400, 50, 2, 50);
     }

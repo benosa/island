@@ -7,11 +7,6 @@ public class Fox extends Predator {
     }
 
     @Override
-    public Fox reproduce() {
-        return new Fox();
-    }
-
-    @Override
     public String getIcon() {
         return "\uD83E\uDD8A";
     }
@@ -19,5 +14,10 @@ public class Fox extends Predator {
     @Override
     public String getName() {
         return "Fox";
+    }
+
+    @Override
+    public Fox reproduce() {
+        return new Fox();
     }
 }
