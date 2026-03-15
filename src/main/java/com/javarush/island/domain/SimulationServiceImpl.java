@@ -136,7 +136,7 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     @Override
     public void collectStatistics(com.javarush.island.domain.ports.out.StatisticsPort statisticsPort) {
-        java.util.Map<String, Integer> animalCounts = new java.util.HashMap<>();
+        java.util.Map<String, Integer> counts = new java.util.HashMap<>();
         int totalPlants = 0;
         int totalAnimals = 0;
 
@@ -145,15 +145,18 @@ public class SimulationServiceImpl implements SimulationUseCase {
                 Cell cell = island.getCell(i, j);
                 for (Animal animal : cell.getAnimals()) {
                     if (animal.isAlive()) {
-                        animalCounts.merge(animal.getName(), 1, Integer::sum);
+                        counts.merge(animal.getName(), 1, Integer::sum);
                         totalAnimals++;
                     }
                 }
-                totalPlants += cell.getPlants().size();
+                for (Plant plant : cell.getPlants()) {
+                    counts.merge(plant.getName(), 1, Integer::sum);
+                    totalPlants++;
+                }
             }
         }
 
-        statisticsPort.displayStatistics(tickCount, animalCounts, totalPlants, totalAnimals);
+        statisticsPort.displayStatistics(tickCount, counts, totalPlants, totalAnimals);
     }
 
     private void resetAllAnimals() {
