@@ -1,15 +1,6 @@
 .gradle
 build/
 /out/
-target/
 .idea/
 *.iml
-*.ipr
-*.iws
-.DS_Store
-Thumbs.db
-.project
-.settings
-.classpath
-.factorypath
 templates/
