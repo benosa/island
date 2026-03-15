@@ -2,21 +2,15 @@ package com.javarush.island.domain.aggregate.plant;
 
 import com.javarush.island.domain.aggregate.animal.Organism;
 
-public class Plant implements Organism {
+public abstract class Plant implements Organism {
 
-    private double weight = 1.0;
-    private boolean eaten = false;
+    protected double weight;
+    protected boolean eaten = false;
 
     public static final int MAX_PER_CELL = 200;
 
-    @Override
-    public String getIcon() {
-        return "\uD83C\uDF3F";
-    }
-
-    @Override
-    public String getName() {
-        return "Plant";
+    public Plant(double weight) {
+        this.weight = weight;
     }
 
     public double getWeight() {

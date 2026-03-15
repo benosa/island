@@ -6,6 +6,8 @@ import com.javarush.island.domain.aggregate.animal.Organism;
 import com.javarush.island.domain.aggregate.animal.predator.Wolf;
 import com.javarush.island.domain.aggregate.island.Cell;
 import com.javarush.island.domain.aggregate.island.Island;
+import com.javarush.island.domain.aggregate.plant.Bush;
+import com.javarush.island.domain.aggregate.plant.Grass;
 import com.javarush.island.domain.aggregate.plant.Plant;
 import com.javarush.island.domain.factory.AnimalFactory;
 import com.javarush.island.domain.ports.in.SimulationUseCase;
@@ -53,9 +55,14 @@ public class SimulationServiceImpl implements SimulationUseCase {
         int plantsPerCell = config.getInitialCount("Plant");
         for (int i = 0; i < island.getRows(); i++) {
             for (int j = 0; j < island.getCols(); j++) {
+                Cell cell = island.getCell(i, j);
+                if (cell.isRiver()) continue; // на реке ничего не растёт
                 int count = ThreadLocalRandom.current().nextInt(plantsPerCell + 1);
                 for (int k = 0; k < count; k++) {
-                    island.getCell(i, j).addPlant(new Plant());
+                    // 70% трава, 30% кустарник
+                    Plant plant = ThreadLocalRandom.current().nextInt(10) < 7
+                            ? new Grass() : new Bush();
+                    cell.addPlant(plant);
                 }
             }
         }
@@ -96,13 +103,16 @@ public class SimulationServiceImpl implements SimulationUseCase {
     }
 
     private void growPlantsInCell(Cell cell) {
+        if (cell.isRiver()) return;
         int currentPlants = cell.getPlants().size();
         int newPlants = (int) Math.round(currentPlants * (config.getPlantGrowthRate() - 1.0));
         if (currentPlants == 0) {
             newPlants = ThreadLocalRandom.current().nextInt(5);
         }
         for (int k = 0; k < newPlants; k++) {
-            cell.addPlant(new Plant());
+            Plant plant = ThreadLocalRandom.current().nextInt(10) < 7
+                    ? new Grass() : new Bush();
+            cell.addPlant(plant);
         }
     }
 
