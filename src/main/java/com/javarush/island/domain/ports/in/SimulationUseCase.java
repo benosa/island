@@ -1,6 +1,6 @@
 package com.javarush.island.domain.ports.in;
 
-import com.javarush.island.domain.aggregate.island.Island;
+import com.javarush.island.domain.ports.out.StatisticsPort;
 
 public interface SimulationUseCase {
 
@@ -14,5 +14,5 @@ public interface SimulationUseCase {
 
     int getTickCount();
 
-    Island getIsland();
+    void collectStatistics(StatisticsPort statisticsPort);
 }

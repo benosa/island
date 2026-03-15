@@ -111,12 +111,31 @@ public class SimulationServiceImpl implements SimulationUseCase {
         return true;
     }
 
+    @Override
     public int getTickCount() {
         return tickCount;
     }
 
-    public Island getIsland() {
-        return island;
+    @Override
+    public void collectStatistics(com.javarush.island.domain.ports.out.StatisticsPort statisticsPort) {
+        java.util.Map<String, Integer> animalCounts = new java.util.HashMap<>();
+        int totalPlants = 0;
+        int totalAnimals = 0;
+
+        for (int i = 0; i < island.getRows(); i++) {
+            for (int j = 0; j < island.getCols(); j++) {
+                Cell cell = island.getCell(i, j);
+                for (Animal animal : cell.getAnimals()) {
+                    if (animal.isAlive()) {
+                        animalCounts.merge(animal.getName(), 1, Integer::sum);
+                        totalAnimals++;
+                    }
+                }
+                totalPlants += cell.getPlants().size();
+            }
+        }
+
+        statisticsPort.displayStatistics(tickCount, animalCounts, totalPlants, totalAnimals);
     }
 
     private void resetAllAnimals() {
