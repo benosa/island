@@ -43,8 +43,11 @@ public class Application {
 
         scheduler.scheduleAtFixedRate(() -> {
             if (!running.get()) return;
-            plantHandler.run();
-            lifecycleHandler.run();
+            // тяжёлую работу кидаем в виртуальный поток, чтоб не блокировать scheduler
+            Thread.ofVirtual().start(() -> {
+                plantHandler.run();
+                lifecycleHandler.run();
+            });
         }, 0, tickMs, TimeUnit.MILLISECONDS);
 
         scheduler.scheduleAtFixedRate(() -> {
