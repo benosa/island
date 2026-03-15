@@ -3,6 +3,7 @@ package com.javarush.island.domain;
 import com.javarush.island.domain.aggregate.animal.Animal;
 import com.javarush.island.domain.aggregate.animal.Direction;
 import com.javarush.island.domain.aggregate.animal.Organism;
+import com.javarush.island.domain.aggregate.animal.predator.Wolf;
 import com.javarush.island.domain.aggregate.island.Cell;
 import com.javarush.island.domain.aggregate.island.Island;
 import com.javarush.island.domain.aggregate.plant.Plant;
@@ -165,6 +166,9 @@ public class SimulationServiceImpl implements SimulationUseCase {
             animal.setProcessed(true);
         }
 
+        // стайная механика волков - считаем бонус до начала охоты
+        updateWolfPackBonus(cell);
+
         for (Animal animal : snapshot) {
             if (!animal.isAlive()) continue;
             tryEat(animal, cell);
@@ -187,6 +191,16 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
         cell.removeDeadAnimals();
         cell.removeEatenPlants();
+    }
+
+    private void updateWolfPackBonus(Cell cell) {
+        int wolfCount = (int) cell.getAnimals().stream()
+                .filter(a -> a instanceof Wolf && a.isAlive())
+                .count();
+        cell.getAnimals().stream()
+                .filter(a -> a instanceof Wolf)
+                .map(a -> (Wolf) a)
+                .forEach(w -> w.setPackBonus(wolfCount));
     }
 
     private void tryEat(Animal animal, Cell cell) {
