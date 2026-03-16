@@ -5,16 +5,17 @@ import com.javarush.island.domain.aggregate.animal.Organism;
 import com.javarush.island.domain.aggregate.plant.Plant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell {
 
     private final int row;
     private final int col;
-    private final List<Animal> animals = new CopyOnWriteArrayList<>();
-    private final List<Plant> plants = new CopyOnWriteArrayList<>();
+    // COW слишком жрёт при частых записях, ReentrantLock и так защищает
+    private final List<Animal> animals = Collections.synchronizedList(new ArrayList<>());
+    private final List<Plant> plants = Collections.synchronizedList(new ArrayList<>());
     private final ReentrantLock lock = new ReentrantLock();
     private TerrainType terrain = TerrainType.PLAIN;
 

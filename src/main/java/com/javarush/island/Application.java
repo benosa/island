@@ -33,6 +33,7 @@ public class Application {
         StatisticsHandler statisticsHandler = new StatisticsHandler(simulationUseCase, statisticsPort);
 
         AtomicBoolean running = new AtomicBoolean(true);
+        AtomicBoolean tickInProgress = new AtomicBoolean(false);
 
         // меню для live-настроек
         ConsoleMenuAdapter menu = new ConsoleMenuAdapter(config, running);
@@ -48,9 +49,15 @@ public class Application {
 
         scheduler.scheduleAtFixedRate(() -> {
             if (!running.get() || menu.getPaused().get()) return;
+            // пропускаем если предыдущий тик ещё не закончился
+            if (!tickInProgress.compareAndSet(false, true)) return;
             Thread.ofVirtual().start(() -> {
-                plantHandler.run();
-                lifecycleHandler.run();
+                try {
+                    plantHandler.run();
+                    lifecycleHandler.run();
+                } finally {
+                    tickInProgress.set(false);
+                }
             });
         }, 0, tickMs, TimeUnit.MILLISECONDS);
 
