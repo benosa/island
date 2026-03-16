@@ -2,6 +2,7 @@ package com.javarush.island.domain.aggregate.animal.herbivore;
 
 public class Mouse extends Herbivore {
 
+    // самое лёгкое животное, 50 грамм
     public Mouse() {
         super(0.05, 500, 1, 0.01);
     }
@@ -10,7 +11,6 @@ public class Mouse extends Herbivore {
     public Mouse reproduce() {
         return new Mouse();
     }
-
     @Override
     public String getIcon() {
         return "\uD83D\uDC01";

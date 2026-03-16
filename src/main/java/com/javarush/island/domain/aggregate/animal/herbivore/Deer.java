@@ -7,17 +7,13 @@ public class Deer extends Herbivore {
     }
 
     @Override
+    public String getIcon() { return "\uD83E\uDD8C"; }
+
+    @Override
+    public String getName() { return "Deer"; }
+
+    @Override
     public Deer reproduce() {
         return new Deer();
-    }
-
-    @Override
-    public String getIcon() {
-        return "\uD83E\uDD8C";
-    }
-
-    @Override
-    public String getName() {
-        return "Deer";
     }
 }

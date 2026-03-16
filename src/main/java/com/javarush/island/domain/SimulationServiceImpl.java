@@ -249,6 +249,9 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
         cell.removeDeadAnimals();
         cell.removeEatenPlants();
+
+        // пробовал тут же считать статистику по клетке но получается гонка
+        // с collectStatistics, убрал
     }
 
     private void updateWolfPackBonus(Cell cell) {

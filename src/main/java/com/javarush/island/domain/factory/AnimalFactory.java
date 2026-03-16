@@ -4,7 +4,9 @@ import com.javarush.island.domain.aggregate.animal.Animal;
 import com.javarush.island.domain.aggregate.animal.predator.*;
 import com.javarush.island.domain.aggregate.animal.herbivore.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class AnimalFactory {
@@ -39,5 +41,17 @@ public class AnimalFactory {
 
     public static List<AnimalPrototype> getAllPrototypes() {
         return PROTOTYPES;
+    }
+
+    // кэш иконок чтоб не создавать объект каждый раз ради getIcon()
+    private static final Map<String, String> ICON_CACHE = new HashMap<>();
+    static {
+        for (AnimalPrototype p : PROTOTYPES) {
+            ICON_CACHE.put(p.name(), p.factory().get().getIcon());
+        }
+    }
+
+    public static String getIcon(String species) {
+        return ICON_CACHE.getOrDefault(species, "?");
     }
 }
