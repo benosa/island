@@ -5,7 +5,6 @@ import com.javarush.island.domain.aggregate.animal.Organism;
 import com.javarush.island.domain.aggregate.plant.Plant;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,9 +12,8 @@ public class Cell {
 
     private final int row;
     private final int col;
-    // COW слишком жрёт при частых записях, ReentrantLock и так защищает
-    private final List<Animal> animals = Collections.synchronizedList(new ArrayList<>());
-    private final List<Plant> plants = Collections.synchronizedList(new ArrayList<>());
+    private final List<Animal> animals = new ArrayList<>();
+    private final List<Plant> plants = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
     private TerrainType terrain = TerrainType.PLAIN;
 
@@ -81,19 +79,35 @@ public class Cell {
         }
     }
 
+    // все геттеры возвращают копию, чтоб не ловить ConcurrentModificationException
     public List<Animal> getAnimals() {
-        return animals;
+        lock.lock();
+        try {
+            return new ArrayList<>(animals);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public List<Plant> getPlants() {
-        return plants;
+        lock.lock();
+        try {
+            return new ArrayList<>(plants);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public List<Organism> getAllOrganisms() {
-        List<Organism> all = new ArrayList<>();
-        all.addAll(animals);
-        all.addAll(plants);
-        return all;
+        lock.lock();
+        try {
+            List<Organism> all = new ArrayList<>(animals.size() + plants.size());
+            all.addAll(animals);
+            all.addAll(plants);
+            return all;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public int getRow() {
@@ -106,6 +120,24 @@ public class Cell {
 
     public ReentrantLock getLock() {
         return lock;
+    }
+
+    public int animalCount() {
+        lock.lock();
+        try {
+            return animals.size();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int plantCount() {
+        lock.lock();
+        try {
+            return plants.size();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void removeDeadAnimals() {
