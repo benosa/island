@@ -4,18 +4,17 @@ import com.javarush.island.domain.ports.in.SimulationUseCase;
 
 public class PlantGrowthHandler implements Runnable {
 
-    private final SimulationUseCase useCase;
+    private final SimulationUseCase simulationUseCase;
 
-    public PlantGrowthHandler(SimulationUseCase useCase) {
-        this.useCase = useCase;
+    public PlantGrowthHandler(SimulationUseCase simulationUseCase) {
+        this.simulationUseCase = simulationUseCase;
     }
 
     @Override
     public void run() {
         try {
-            useCase.processPlantGrowth();
+            simulationUseCase.processPlantGrowth();
         } catch (Exception e) {
-            // тут в основном бывает если клетка заблокирована, не критично
             System.err.println("растения: " + e.getMessage());
         }
     }

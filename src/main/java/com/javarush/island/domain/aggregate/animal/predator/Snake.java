@@ -1,6 +1,8 @@
 package com.javarush.island.domain.aggregate.animal.predator;
 
-// Удав
+/**
+ * Удав - медленный но ловит мышей и кроликов
+ */
 public class Snake extends Predator {
 
     public Snake() {

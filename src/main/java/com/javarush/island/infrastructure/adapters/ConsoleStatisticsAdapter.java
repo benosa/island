@@ -37,7 +37,6 @@ public class ConsoleStatisticsAdapter implements StatisticsPort {
         printLine(String.format(" Такт: %d | Животных: %d | Растений: %d", tick, totalAnimals, totalPlants), width);
         System.out.println("\u2560" + "\u2550".repeat(width) + "\u2563");
 
-        // иконки берём из фабрики, а не дублируем тут
         printLine(" \u2501\u2501 Хищники:", width);
         for (String name : PREDATOR_NAMES) {
             printSpeciesLine(name, counts.getOrDefault(name, 0), width);

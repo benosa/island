@@ -307,6 +307,10 @@ public class SimulationServiceImpl implements SimulationUseCase {
         int steps = animal.getSpeed();
         if (steps == 0) return;
 
+        // пробовал давать животным предпочтение двигаться к еде
+        // но это сильно тормозило, пришлось убрать
+        // int preferredDir = findFoodDirection(animal, cell);
+
         int actualSteps = ThreadLocalRandom.current().nextInt(steps) + 1;
         Cell current = cell;
 

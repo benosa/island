@@ -2,9 +2,6 @@ package com.javarush.island.domain.aggregate.animal.predator;
 
 public class Eagle extends Predator {
 
-    // думал сделать чтоб орёл видел добычу на соседних клетках
-    // но пока не понял как это вписать в tryEat
-
     public Eagle() {
         super(6, 20, 3, 1);
     }
@@ -13,12 +10,16 @@ public class Eagle extends Predator {
     public Eagle reproduce() {
         return new Eagle();
     }
+
+    // хотел сделать чтоб орёл видел добычу на соседних клетках
+    // но пока не понял как это вписать в tryEat, оставил как есть
     @Override
-    public String getIcon() {
-        return "\uD83E\uDD85";
+    public boolean eat(com.javarush.island.domain.aggregate.animal.Organism prey) {
+        return super.eat(prey);
     }
+
     @Override
-    public String getName() {
-        return "Eagle";
-    }
+    public String getIcon() { return "\uD83E\uDD85"; }
+    @Override
+    public String getName() { return "Eagle"; }
 }
