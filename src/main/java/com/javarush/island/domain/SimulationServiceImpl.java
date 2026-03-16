@@ -270,16 +270,19 @@ public class SimulationServiceImpl implements SimulationUseCase {
     }
 
     private void tryReproduce(Animal animal, Cell cell) {
-        if (animal.isReproduced()) return;
+        if (animal.isReproduced() || !animal.canReproduce()) return;
 
         List<Animal> sameSpecies = cell.getAnimals().stream()
                 .filter(a -> a.getClass().equals(animal.getClass())
-                        && a != animal && a.isAlive() && !a.isReproduced())
+                        && a != animal && a.isAlive() && !a.isReproduced()
+                        && a.canReproduce())
                 .toList();
 
         if (!sameSpecies.isEmpty()) {
             animal.setReproduced(true);
+            animal.startReproductionCooldown();
             sameSpecies.getFirst().setReproduced(true);
+            sameSpecies.getFirst().startReproductionCooldown();
             int offspring = config.getOffspringCount(animal.getName());
             for (int i = 0; i < offspring; i++) {
                 Animal child = animal.reproduce();

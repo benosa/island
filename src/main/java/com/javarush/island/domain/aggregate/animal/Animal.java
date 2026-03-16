@@ -12,6 +12,7 @@ public abstract class Animal implements Organism {
     protected boolean alive = true;
     protected boolean reproduced = false;
     protected volatile boolean processed = false;
+    protected int reproductionCooldown = 0; // тактов до следующего размножения
 
     protected int row;
     protected int col;
@@ -113,9 +114,18 @@ public abstract class Animal implements Organism {
         this.processed = processed;
     }
 
+    public boolean canReproduce() {
+        return reproductionCooldown <= 0;
+    }
+
+    public void startReproductionCooldown() {
+        this.reproductionCooldown = 3; // пауза 3 такта между размножениями
+    }
+
     public void resetState() {
         this.reproduced = false;
         this.processed = false;
+        if (reproductionCooldown > 0) reproductionCooldown--;
     }
 
     // тяжёлые животные переопределяют - не могут переплыть реку
