@@ -61,6 +61,10 @@ public abstract class Animal implements Organism {
         return maxPerCell;
     }
 
+    public void setMaxPerCell(int maxPerCell) {
+        this.maxPerCell = maxPerCell;
+    }
+
     public int getSpeed() {
         return speed;
     }

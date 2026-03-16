@@ -7,7 +7,7 @@ public abstract class Plant implements Organism {
     protected double weight;
     protected boolean eaten = false;
 
-    public static final int MAX_PER_CELL = 200;
+    public static int MAX_PER_CELL = 200; // можно переопределить из конфига
 
     public Plant(double weight) {
         this.weight = weight;

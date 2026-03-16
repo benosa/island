@@ -8,9 +8,15 @@ public interface SimulationConfigPort {
 
     int getMaxTicks();
 
+    String getStopCondition();
+
     double getPlantGrowthRate();
+
+    int getPlantMaxPerCell();
 
     int getInitialCount(String species);
 
     int getOffspringCount(String species);
+
+    int getMaxPerCell(String species, int defaultValue);
 }

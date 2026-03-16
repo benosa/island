@@ -35,12 +35,16 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     @Override
     public void initialize() {
+        Plant.MAX_PER_CELL = config.getPlantMaxPerCell();
         island.generateRiver();
 
         for (AnimalFactory.AnimalPrototype prototype : AnimalFactory.getAllPrototypes()) {
             int count = config.getInitialCount(prototype.name());
             for (int i = 0; i < count; i++) {
                 Animal animal = AnimalFactory.create(prototype.name());
+                // maxPerCell из конфига (если задан)
+                int configMax = config.getMaxPerCell(prototype.name(), animal.getMaxPerCell());
+                animal.setMaxPerCell(configMax);
                 // не спавним на реке
                 Cell cell;
                 do {
@@ -118,6 +122,11 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     @Override
     public boolean isSimulationOver() {
+        String condition = config.getStopCondition();
+        if ("MAX_TICKS".equals(condition)) {
+            return tickCount >= config.getMaxTicks();
+        }
+        // ALL_DEAD (по умолчанию) - останавливаемся когда все вымерли или по тактам
         if (tickCount >= config.getMaxTicks()) return true;
         for (int i = 0; i < island.getRows(); i++) {
             for (int j = 0; j < island.getCols(); j++) {

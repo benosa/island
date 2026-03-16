@@ -14,7 +14,9 @@ public class SimulationConfig implements SimulationConfigPort {
     private int islandCols;
     private int tickDurationMs;
     private int maxTicks;
+    private String stopCondition;
     private double plantGrowthRate;
+    private int plantMaxPerCell;
 
     public SimulationConfig() {
         loadProperties();
@@ -32,39 +34,48 @@ public class SimulationConfig implements SimulationConfigPort {
     }
 
     private void parseProperties() {
-        islandRows = Integer.parseInt(properties.getProperty("island.rows", "20"));
-        islandCols = Integer.parseInt(properties.getProperty("island.cols", "100"));
-        tickDurationMs = Integer.parseInt(properties.getProperty("simulation.tickDurationMs", "500"));
-        maxTicks = Integer.parseInt(properties.getProperty("simulation.maxTicks", "200"));
+        islandRows = getInt("island.rows", 20);
+        islandCols = getInt("island.cols", 100);
+        tickDurationMs = getInt("simulation.tickDurationMs", 500);
+        maxTicks = getInt("simulation.maxTicks", 200);
+        stopCondition = properties.getProperty("simulation.stopCondition", "ALL_DEAD");
         plantGrowthRate = Double.parseDouble(properties.getProperty("plant.growthRate", "1.5"));
+        plantMaxPerCell = getInt("plant.maxPerCell", 200);
     }
 
-    public int getIslandRows() {
-        return islandRows;
-    }
+    @Override
+    public int getIslandRows() { return islandRows; }
 
-    public int getIslandCols() {
-        return islandCols;
-    }
+    @Override
+    public int getIslandCols() { return islandCols; }
 
-    public int getTickDurationMs() {
-        return tickDurationMs;
-    }
+    public int getTickDurationMs() { return tickDurationMs; }
 
-    public int getMaxTicks() {
-        return maxTicks;
-    }
+    @Override
+    public int getMaxTicks() { return maxTicks; }
 
-    public double getPlantGrowthRate() {
-        return plantGrowthRate;
-    }
+    @Override
+    public String getStopCondition() { return stopCondition; }
 
+    @Override
+    public double getPlantGrowthRate() { return plantGrowthRate; }
+
+    @Override
+    public int getPlantMaxPerCell() { return plantMaxPerCell; }
+
+    @Override
     public int getInitialCount(String species) {
         return getInt("animal.initial." + species, 0);
     }
 
+    @Override
     public int getOffspringCount(String species) {
         return getInt("animal.offspring." + species, 1);
+    }
+
+    @Override
+    public int getMaxPerCell(String species, int defaultValue) {
+        return getInt("animal.maxPerCell." + species, defaultValue);
     }
 
     private int getInt(String key, int defaultValue) {
