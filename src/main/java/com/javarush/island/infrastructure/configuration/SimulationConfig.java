@@ -78,6 +78,11 @@ public class SimulationConfig implements SimulationConfigPort {
         return getInt("animal.maxPerCell." + species, defaultValue);
     }
 
+    // сеттеры для live-изменений из меню
+    public void setTickDurationMs(int tickDurationMs) { this.tickDurationMs = tickDurationMs; }
+    public void setMaxTicks(int maxTicks) { this.maxTicks = maxTicks; }
+    public void setPlantGrowthRate(double plantGrowthRate) { this.plantGrowthRate = plantGrowthRate; }
+
     private int getInt(String key, int defaultValue) {
         try {
             return Integer.parseInt(properties.getProperty(key, String.valueOf(defaultValue)));

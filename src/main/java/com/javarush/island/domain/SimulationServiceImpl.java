@@ -148,10 +148,19 @@ public class SimulationServiceImpl implements SimulationUseCase {
         java.util.Map<String, Integer> counts = new java.util.HashMap<>();
         int totalPlants = 0;
         int totalAnimals = 0;
+        String[][] mapIcons = new String[island.getRows()][island.getCols()];
 
         for (int i = 0; i < island.getRows(); i++) {
             for (int j = 0; j < island.getCols(); j++) {
                 Cell cell = island.getCell(i, j);
+
+                if (cell.isRiver()) {
+                    mapIcons[i][j] = "\uD83C\uDF0A"; // волна
+                } else {
+                    // ищем доминирующий вид на клетке
+                    mapIcons[i][j] = getDominantIcon(cell);
+                }
+
                 for (Animal animal : cell.getAnimals()) {
                     if (animal.isAlive()) {
                         counts.merge(animal.getName(), 1, Integer::sum);
@@ -165,7 +174,29 @@ public class SimulationServiceImpl implements SimulationUseCase {
             }
         }
 
+        statisticsPort.displayMap(mapIcons, island.getRows(), island.getCols());
         statisticsPort.displayStatistics(tickCount, counts, totalPlants, totalAnimals);
+    }
+
+    private String getDominantIcon(Cell cell) {
+        if (!cell.getAnimals().isEmpty()) {
+            // какого вида больше всего
+            java.util.Map<String, Long> speciesCount = cell.getAnimals().stream()
+                    .filter(Animal::isAlive)
+                    .collect(java.util.stream.Collectors.groupingBy(
+                            Animal::getName, java.util.stream.Collectors.counting()));
+            if (!speciesCount.isEmpty()) {
+                String dominant = java.util.Collections.max(speciesCount.entrySet(),
+                        java.util.Map.Entry.comparingByValue()).getKey();
+                return cell.getAnimals().stream()
+                        .filter(a -> a.getName().equals(dominant))
+                        .findFirst().map(Animal::getIcon).orElse(null);
+            }
+        }
+        if (!cell.getPlants().isEmpty()) {
+            return "\uD83C\uDF3F"; // трава
+        }
+        return null; // пусто
     }
 
     private void resetAllAnimals() {

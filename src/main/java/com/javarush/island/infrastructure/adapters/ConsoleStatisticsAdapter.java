@@ -30,32 +30,56 @@ public class ConsoleStatisticsAdapter implements StatisticsPort {
     private static final String[] HERBIVORE_NAMES = {"Horse", "Deer", "Rabbit", "Mouse", "Goat",
             "Sheep", "Boar", "Buffalo", "Duck", "Caterpillar"};
 
+    // сколько столбцов карты показывать (остров 100 клеток это слишком)
+    private static final int MAP_DISPLAY_COLS = 40;
+
     @Override
-    public void displayStatistics(int tick, Map<String, Integer> animalCounts, int totalPlants, int totalAnimals) {
+    public void displayMap(String[][] mapIcons, int rows, int cols) {
+        // сжимаем карту если остров шире чем MAP_DISPLAY_COLS
+        int step = Math.max(1, cols / MAP_DISPLAY_COLS);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            sb.append(" ");
+            for (int j = 0; j < cols; j += step) {
+                String icon = mapIcons[i][j];
+                if (icon != null) {
+                    sb.append(icon);
+                } else {
+                    sb.append("\u2591\u2591"); // пустая клетка, два символа для ширины эмодзи
+                }
+            }
+            sb.append("\n");
+        }
+        System.out.print(sb);
+    }
+
+    @Override
+    public void displayStatistics(int tick, Map<String, Integer> counts, int totalPlants, int totalAnimals) {
         clearConsole();
 
-        int width = 42;
+        int width = 44;
         System.out.println("\u2554" + "\u2550".repeat(width) + "\u2557");
         printLine(String.format(" Такт: %d | Животных: %d | Растений: %d", tick, totalAnimals, totalPlants), width);
         System.out.println("\u2560" + "\u2550".repeat(width) + "\u2563");
 
         printLine(" \u2501\u2501 Хищники:", width);
         for (String name : PREDATOR_NAMES) {
-            int count = animalCounts.getOrDefault(name, 0);
+            int count = counts.getOrDefault(name, 0);
             printLine(String.format("   %s %-12s %d", ICONS.get(name), name, count), width);
         }
 
         printLine(" \u2501\u2501 Травоядные:", width);
         for (String name : HERBIVORE_NAMES) {
-            int count = animalCounts.getOrDefault(name, 0);
+            int count = counts.getOrDefault(name, 0);
             printLine(String.format("   %s %-12s %d", ICONS.get(name), name, count), width);
         }
 
         System.out.println("\u2560" + "\u2550".repeat(width) + "\u2563");
-        printLine(String.format(" \uD83C\uDF3F Трава: %-6d  \uD83C\uDF33 Кусты: %d",
-                animalCounts.getOrDefault("Grass", 0),
-                animalCounts.getOrDefault("Bush", 0)), width);
-        printLine(String.format(" \uD83C\uDF0A Рельеф: река посередине острова"), width);
+        printLine(String.format(" \uD83C\uDF3F Трава: %-7d \uD83C\uDF33 Кусты: %d",
+                counts.getOrDefault("Grass", 0), counts.getOrDefault("Bush", 0)), width);
+        printLine(" \uD83C\uDF0A Река делит остров пополам", width);
+        printLine(" [Enter] пауза и меню настроек", width);
 
         System.out.println("\u255A" + "\u2550".repeat(width) + "\u255D");
     }
