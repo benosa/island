@@ -36,7 +36,7 @@ public abstract class Animal implements Organism {
 
     public void consumeEnergy() {
         if (foodNeeded == 0) return;
-        currentFood -= foodNeeded * 0.1;
+        currentFood -= foodNeeded * 0.03;
         if (currentFood < 0) {
             alive = false;
         }
@@ -119,7 +119,7 @@ public abstract class Animal implements Organism {
     }
 
     public void startReproductionCooldown() {
-        this.reproductionCooldown = 3; // пауза 3 такта между размножениями
+        this.reproductionCooldown = 2;
     }
 
     public void resetState() {

@@ -21,12 +21,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulationServiceImpl implements SimulationUseCase {
 
     private final Island island;
     private final SimulationConfigPort config;
     private int tickCount = 0;
+    private final AtomicInteger totalAnimals = new AtomicInteger(0);
 
     public SimulationServiceImpl(Island island, SimulationConfigPort config) {
         this.island = island;
@@ -200,13 +202,16 @@ public class SimulationServiceImpl implements SimulationUseCase {
     }
 
     private void resetAllAnimals() {
+        int count = 0;
         for (int i = 0; i < island.getRows(); i++) {
             for (int j = 0; j < island.getCols(); j++) {
                 for (Animal animal : island.getCell(i, j).getAnimals()) {
                     animal.resetState();
+                    count++;
                 }
             }
         }
+        totalAnimals.set(count);
     }
 
     private void processCellLifecycle(Cell cell) {
@@ -271,6 +276,9 @@ public class SimulationServiceImpl implements SimulationUseCase {
 
     private void tryReproduce(Animal animal, Cell cell) {
         if (animal.isReproduced() || !animal.canReproduce()) return;
+        // глобальный лимит
+        int maxAnimals = config.getMaxAnimals();
+        if (maxAnimals > 0 && totalAnimals.get() >= maxAnimals) return;
 
         List<Animal> sameSpecies = cell.getAnimals().stream()
                 .filter(a -> a.getClass().equals(animal.getClass())
@@ -287,6 +295,7 @@ public class SimulationServiceImpl implements SimulationUseCase {
             for (int i = 0; i < offspring; i++) {
                 Animal child = animal.reproduce();
                 cell.addAnimal(child);
+                totalAnimals.incrementAndGet();
             }
         }
     }

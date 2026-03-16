@@ -19,4 +19,6 @@ public interface SimulationConfigPort {
     int getOffspringCount(String species);
 
     int getMaxPerCell(String species, int defaultValue);
+
+    int getMaxAnimals();
 }

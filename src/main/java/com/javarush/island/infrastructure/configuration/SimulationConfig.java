@@ -78,6 +78,9 @@ public class SimulationConfig implements SimulationConfigPort {
         return getInt("animal.maxPerCell." + species, defaultValue);
     }
 
+    @Override
+    public int getMaxAnimals() { return getInt("simulation.maxAnimals", 0); }
+
     // сеттеры для live-изменений из меню
     public void setTickDurationMs(int tickDurationMs) { this.tickDurationMs = tickDurationMs; }
     public void setMaxTicks(int maxTicks) { this.maxTicks = maxTicks; }
